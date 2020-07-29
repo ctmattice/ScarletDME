@@ -34,6 +34,8 @@
 #
 # Changelog
 # ---------
+# 28JUL20 ctm Modified to add ScarlerDME configuration to /etc and also to
+#             test for symobilic link and create if not present.
 # 20Feb20 gwb Added -m32 $(ARCH) flag to ensure we're compiling with 32 bit 
 #             libraries.
 #             I also inverted the timeline of these comments in order to make
@@ -182,14 +184,22 @@ sysseg.o: sysseg.c revstamp.h
 
 .PHONY: clean distclean install datafiles
 
-install:  
+install:
 	@echo Installing to $(INSTROOT)
 	@test -d $(INSTROOT) || mkdir $(INSTROOT)
 	@test -d $(INSTROOT)/bin || mkdir $(INSTROOT)/bin
 	@for qm_prog in $(GPLBIN)*; do \
-	  install -m 775 -o qmsys -g qmusers $$qm_prog $(INSTROOT)/bin; \
+		install -m 775 -o qmsys -g qmusers $$qm_prog $(INSTROOT)/bin; \
 	done
 	@chmod -R 775 $(INSTROOT)
+
+#	For now copy qmconfig to /etc/scarlet.conf
+	@echo Writing scarlet.conf file
+	@cp $(main)qmconfig /etc/scarlet.conf
+	@chmod 644 /etc/scarlet.conf
+
+#	Create symbolic link if it does not exist
+	@test -f /usr/bin/qm || @ln -s /usr/qmsys/bin/qm /usr/bin/qm
 
 datafiles:
 	@echo Installing data files...
