@@ -8,3 +8,11 @@ bin/qmfix
 bin/qmidx
 bin/qmlnxd
 bin/qmtic
+
+#Additional work files to ignore, IDE's, etc.
+.vscode/**
+.idea/**
+PVS_Studio.fullhtml/**
+gcc.log
+PVS_Studio.tasks
+strace_out
